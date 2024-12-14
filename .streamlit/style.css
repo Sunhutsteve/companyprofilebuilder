@@ -50,23 +50,36 @@
 /* Tech tags */
 .tech-tag {
     display: inline-block;
-    padding: 6px 14px;
+    padding: 8px 16px;
     margin-right: 12px;
     margin-bottom: 16px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
-    background-color: #1f77b4;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    box-shadow: 0 2px 8px rgba(31, 119, 180, 0.2);
+    font-weight: 500;
+    background-color: #f0f4f8;
+    color: #2d3748;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tech-tag:nth-child(1) {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+    border-color: #bee3f8;
+}
+
+.tech-tag:nth-child(2) {
+    background-color: #f0fff4;
+    color: #276749;
+    border-color: #c6f6d5;
 }
 
 .tech-tag:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(31, 119, 180, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Bullet points */
