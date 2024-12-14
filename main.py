@@ -25,15 +25,15 @@ if st.button("Search", type="primary"):
             info = stock.info
             
             # Display company info
-            st.write("Company Name")
+            st.markdown("**Company Name**")
             st.write(info.get('longName', 'N/A'))
             
             # Display stock price
-            st.write("Stock Price")
+            st.markdown("**Stock Price**")
             st.write(f"${info.get('currentPrice', 0):.2f}")
             
             # Display market cap
-            st.write("Market Cap")
+            st.markdown("**Market Cap**")
             st.write(format_large_number(info.get('marketCap', 0)))
             
         except Exception as e:
