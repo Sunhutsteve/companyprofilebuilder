@@ -7,30 +7,19 @@ st.title("Company Profile Generator")
 # Load common stock symbols and names (could be cached)
 @st.cache_data
 def load_stock_data():
-    # Major indices components for demo
-    indices = ['^GSPC', '^DJI', '^IXIC']  # S&P 500, Dow Jones, NASDAQ
-    symbols = set()
-    names = {}
+    # Add biotech and pharma stocks
+    biotech_stocks = {
+        'BLUE': 'bluebird bio, Inc.',
+        'CALT': 'Calliditas Therapeutics AB',
+        'AMGN': 'Amgen Inc.',
+        'BIIB': 'Biogen Inc.',
+        'GILD': 'Gilead Sciences, Inc.',
+        'REGN': 'Regeneron Pharmaceuticals, Inc.',
+        'VRTX': 'Vertex Pharmaceuticals Inc.',
+    }
     
-    for index in indices:
-        try:
-            index_data = yf.Ticker(index)
-            if hasattr(index_data, 'components'):
-                components = index_data.components
-                for symbol in components:
-                    try:
-                        company = yf.Ticker(symbol)
-                        info = company.info
-                        if 'longName' in info:
-                            symbols.add(symbol)
-                            names[symbol] = info['longName']
-                    except:
-                        continue
-        except:
-            continue
-    
-    # Add some common tech stocks if not already included
-    common_stocks = {
+    # Add tech stocks
+    tech_stocks = {
         'AAPL': 'Apple Inc.',
         'MSFT': 'Microsoft Corporation',
         'GOOGL': 'Alphabet Inc.',
@@ -38,13 +27,27 @@ def load_stock_data():
         'META': 'Meta Platforms Inc.',
         'NVDA': 'NVIDIA Corporation',
         'TSLA': 'Tesla Inc.',
+        'INTC': 'Intel Corporation',
+        'AMD': 'Advanced Micro Devices, Inc.',
+        'CRM': 'Salesforce, Inc.',
+        'ADBE': 'Adobe Inc.',
     }
-    symbols.update(common_stocks.keys())
-    names.update(common_stocks)
+
+    # Add financial stocks
+    financial_stocks = {
+        'JPM': 'JPMorgan Chase & Co.',
+        'BAC': 'Bank of America Corporation',
+        'GS': 'Goldman Sachs Group Inc.',
+        'MS': 'Morgan Stanley',
+        'BLK': 'BlackRock Inc.',
+    }
+
+    # Combine all stocks
+    all_stocks = {**biotech_stocks, **tech_stocks, **financial_stocks}
     
     return pd.DataFrame({
-        'symbol': list(symbols),
-        'name': [names.get(s, s) for s in symbols]
+        'symbol': list(all_stocks.keys()),
+        'name': list(all_stocks.values())
     })
 
 # Load stock data
@@ -55,10 +58,28 @@ search_query = st.text_input("Search by company name or symbol", value="", label
 
 filtered_stocks = []
 if search_query:
-    search_query = search_query.upper()
-    mask = (stocks_df['symbol'].str.contains(search_query)) | \
-           (stocks_df['name'].str.upper().str.contains(search_query))
-    filtered_stocks = stocks_df[mask].head(7).to_dict('records') if not mask.empty else []
+    # Convert everything to lowercase for case-insensitive matching
+    search_query = search_query.lower()
+    
+    # Create masks for symbol and name matches
+    symbol_mask = stocks_df['symbol'].str.lower().str.contains(search_query, na=False)
+    name_mask = stocks_df['name'].str.lower().str.contains(search_query, na=False)
+    
+    # Combine masks and sort results
+    mask = symbol_mask | name_mask
+    
+    if mask.any():
+        # Sort matches - prioritize matches that start with the search query
+        matches = stocks_df[mask].copy()
+        matches['symbol_start_match'] = matches['symbol'].str.lower().str.startswith(search_query)
+        matches['name_start_match'] = matches['name'].str.lower().str.startswith(search_query)
+        matches['sort_score'] = matches['symbol_start_match'].astype(int) * 2 + matches['name_start_match'].astype(int)
+        
+        # Sort by score (descending) and then alphabetically by symbol
+        matches = matches.sort_values(['sort_score', 'symbol'], ascending=[False, True])
+        
+        # Get top 7 matches
+        filtered_stocks = matches.head(7).to_dict('records')
 
 # Display suggestions
 if filtered_stocks:
