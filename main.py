@@ -11,6 +11,7 @@ def load_stock_data():
     biotech_stocks = {
         'BLUE': 'bluebird bio, Inc.',
         'CALT': 'Calliditas Therapeutics AB',
+        'ETON': 'Eton Pharmaceuticals, Inc.',
         'AMGN': 'Amgen Inc.',
         'BIIB': 'Biogen Inc.',
         'GILD': 'Gilead Sciences, Inc.',
@@ -80,6 +81,16 @@ if search_query:
         
         # Get top 7 matches
         filtered_stocks = matches.head(7).to_dict('records')
+    else:
+        # Try to fetch the company directly from Yahoo Finance if it's not in our dataset
+        try:
+            possible_symbol = search_query.upper()
+            stock = yf.Ticker(possible_symbol)
+            info = stock.info
+            if 'longName' in info:
+                filtered_stocks = [{'symbol': possible_symbol, 'name': info['longName']}]
+        except:
+            pass
 
 # Display suggestions
 if filtered_stocks:
