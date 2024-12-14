@@ -73,10 +73,17 @@ if symbol:
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
+            price_change = info.get('regularMarketChange', 0)
+            current_price = info.get('currentPrice', 0)
+            if current_price > 0:
+                price_change_pct = (price_change / current_price) * 100
+            else:
+                price_change_pct = 0
+            
             st.metric(
                 "Current Price",
-                f"${info['currentPrice']:.2f}",
-                f"{info['regularMarketChangePercent']:.2f}%"
+                f"${current_price:.2f}",
+                f"{price_change_pct:.2f}%"
             )
         
         with col2:
