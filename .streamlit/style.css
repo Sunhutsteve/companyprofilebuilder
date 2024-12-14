@@ -1,45 +1,47 @@
-/* Main Styles */
+/* Reset and base styles */
 .stApp {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: Arial, sans-serif;
 }
 
-/* Headers */
-.main-header {
-    color: #00ff88;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
+/* Title */
+.css-10trblm {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #1a237e;
 }
 
-/* Metrics */
-.metric-container {
-    background-color: #1c1c1c;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #333;
+/* Input field */
+.stTextInput input {
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.metric-label {
-    color: #8b949e;
-    font-size: 0.9rem;
-    font-weight: 600;
+/* Labels */
+.css-1vbkxwb p {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
 }
 
-.metric-value {
-    color: #00ff88;
-    font-size: 1.5rem;
-    font-weight: 700;
+/* Values */
+.css-1vbkxwb p:nth-child(even) {
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
 }
 
-/* Input fields */
-.stTextInput > div > div > input {
-    background-color: #1c1c1c;
-    color: #fff;
-    border: 1px solid #333;
+/* Search button */
+.stButton button {
+    background-color: #ffd700;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
 }
 
-/* Error messages */
-.stAlert {
-    background-color: #ff4444;
-    color: white;
+.stButton button:hover {
+    background-color: #ffc107;
 }
