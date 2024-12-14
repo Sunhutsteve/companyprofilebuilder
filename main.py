@@ -1,10 +1,78 @@
 import streamlit as st
 import yfinance as yf
+import pandas as pd
 
 st.title("Stock Price Checker")
 
-# Stock symbol input
-symbol = st.text_input("Stock Symbol", value="", label_visibility="collapsed").upper()
+# Load common stock symbols and names (could be cached)
+@st.cache_data
+def load_stock_data():
+    # Major indices components for demo
+    indices = ['^GSPC', '^DJI', '^IXIC']  # S&P 500, Dow Jones, NASDAQ
+    symbols = set()
+    names = {}
+    
+    for index in indices:
+        try:
+            index_data = yf.Ticker(index)
+            if hasattr(index_data, 'components'):
+                components = index_data.components
+                for symbol in components:
+                    try:
+                        company = yf.Ticker(symbol)
+                        info = company.info
+                        if 'longName' in info:
+                            symbols.add(symbol)
+                            names[symbol] = info['longName']
+                    except:
+                        continue
+        except:
+            continue
+    
+    # Add some common tech stocks if not already included
+    common_stocks = {
+        'AAPL': 'Apple Inc.',
+        'MSFT': 'Microsoft Corporation',
+        'GOOGL': 'Alphabet Inc.',
+        'AMZN': 'Amazon.com Inc.',
+        'META': 'Meta Platforms Inc.',
+        'NVDA': 'NVIDIA Corporation',
+        'TSLA': 'Tesla Inc.',
+    }
+    symbols.update(common_stocks.keys())
+    names.update(common_stocks)
+    
+    return pd.DataFrame({
+        'symbol': list(symbols),
+        'name': [names.get(s, s) for s in symbols]
+    })
+
+# Load stock data
+stocks_df = load_stock_data()
+
+# Search functionality
+search_query = st.text_input("Search by company name or symbol", value="", label_visibility="collapsed")
+
+filtered_stocks = []
+if search_query:
+    search_query = search_query.upper()
+    mask = (stocks_df['symbol'].str.contains(search_query)) | \
+           (stocks_df['name'].str.upper().str.contains(search_query))
+    filtered_stocks = stocks_df[mask].head(7).to_dict('records')
+
+# Display suggestions
+if filtered_stocks:
+    selected_stock = None
+    for stock in filtered_stocks:
+        if st.button(f"{stock['symbol']} - {stock['name']}", key=stock['symbol']):
+            selected_stock = stock['symbol']
+    
+    if selected_stock:
+        symbol = selected_stock
+    else:
+        symbol = search_query.upper()
+else:
+    symbol = search_query.upper()
 
 def format_large_number(num):
     return f"${num:,.2f}"
