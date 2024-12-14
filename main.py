@@ -199,6 +199,20 @@ if st.button("Search", type="primary"):
                     st.markdown("• Biotechnology company focused on addressing the underlying cause of disease at the genetic level")
                     st.markdown("• 170+ patients have received its therapies across 8 clinical trials")
             
+            # Special description for Eton Pharmaceuticals
+            elif 'eton' in company_name:
+                st.markdown("• Innovative pharmaceutical company focused on developing and commercializing treatments for rare diseases")
+                st.markdown("• Specializes in hospital-administered products and rare disease treatments")
+                segments = [
+                    ("Hospital Products", "70", "developing and commercializing hospital-administered injectable products"),
+                    ("Rare Disease", "30", "focusing on treatments for rare pediatric diseases")
+                ]
+                st.markdown("\n**Product Portfolio:**")
+                st.markdown("• Alkindi Sprinkle: Treatment for adrenocortical insufficiency in children under 17 years")
+                st.markdown("• Carglumic Acid: Treatment for elevated ammonia levels due to NAGS deficiency")
+                st.markdown("• Biorphen: Ready-to-use formulation of phenylephrine for hypotension")
+                st.markdown("• Rezipres: Ready-to-use ephedrine injection for hypotension during anesthesia")
+            
             # Company-specific segments
             elif 'microsoft' in company_name:
                 segments = [
