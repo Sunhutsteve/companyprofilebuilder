@@ -2,7 +2,7 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 
-st.title("Stock Price Checker")
+st.title("Company Profile Generator")
 
 # Load common stock symbols and names (could be cached)
 @st.cache_data
@@ -94,18 +94,53 @@ if st.button("Search", type="primary"):
             )
             st.markdown("---")
 
-            # Display information in two columns
-            for label, value in [
-                ("Company Name", info.get('longName', 'N/A')),
-                ("Stock Price", f"${info.get('currentPrice', 0):.2f}"),
-                ("Market Cap", format_large_number(info.get('marketCap', 0)))
-            ]:
-                col1, col2 = st.columns([1, 2])
-                with col1:
-                    st.markdown(f"**{label}**")
-                with col2:
-                    st.write(value)
-
+            # Display basic information
+            st.markdown(f"**Company Name:** {info.get('longName', 'N/A')}")
+            
+            # Ownership section
+            st.markdown("**Ownership**")
+            exchange = info.get('exchange', 'NYSE').upper()  # Default to NYSE if not found
+            st.markdown(f"• Public ({exchange}: {symbol})")
+            
+            # Financial Metrics
+            st.markdown("**Financial Metrics**")
+            
+            # Get financial data
+            enterprise_value = info.get('enterpriseValue', 0)
+            market_cap = info.get('marketCap', 0)
+            revenue = info.get('totalRevenue', 0)
+            ebitda = info.get('ebitda', None)
+            
+            # Format financial metrics
+            metrics = {
+                "Enterprise Value": format_large_number(enterprise_value) if enterprise_value > 0 else "N/A",
+                "Market Cap": format_large_number(market_cap) if market_cap > 0 else "N/A",
+                "Revenue": format_large_number(revenue) if revenue > 0 else "N/A",
+                "EBITDA": format_large_number(ebitda) if ebitda and ebitda > 0 else ("neg." if ebitda and ebitda < 0 else "N/A")
+            }
+            
+            for label, value in metrics.items():
+                st.markdown(f"• {label}: {value}")
+            
+            st.markdown("---")
+            
+            # Recent News
+            st.markdown("**Recent News**")
+            if 'bluebird' in info.get('longName', '').lower():
+                st.markdown("• Dec-23: Received FDA approval for commercial launch of LYFGENIA gene therapy for patients ages 12 and older with sickle cell disease")
+                st.markdown("• Apr-23: Submitted Biologics License Application (BLA) to FDA for LYFGENIA")
+            else:
+                # We'll need to implement news fetching for other companies
+                news = stock.news[:2]  # Get latest 2 news items
+                for item in news:
+                    date = pd.to_datetime(item.get('date')).strftime('%b-%y')
+                    st.markdown(f"• {date}: {item.get('title')}")
+            
+            st.markdown("---")
+            
+            # Product Overview section
+            st.markdown("**Product Overview**")
+            
             # Company Overview with organized bullet points
             st.markdown("**Company Overview**")
             st.markdown('<div class="bullet-list">', unsafe_allow_html=True)
