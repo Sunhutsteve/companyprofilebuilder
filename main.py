@@ -58,7 +58,7 @@ if search_query:
     search_query = search_query.upper()
     mask = (stocks_df['symbol'].str.contains(search_query)) | \
            (stocks_df['name'].str.upper().str.contains(search_query))
-    filtered_stocks = stocks_df[mask].head(7).to_dict('records')
+    filtered_stocks = stocks_df[mask].head(7).to_dict('records') if not mask.empty else []
 
 # Display suggestions
 if filtered_stocks:
@@ -118,8 +118,22 @@ if st.button("Search", type="primary"):
             company_name = info.get('longName', '').lower()
             business_summary = info.get('longBusinessSummary', '').lower()
             
+            # Biotech company descriptions
+            if 'bluebird' in company_name or ('bio' in company_name and 'technology' in business_summary):
+                segments = [
+                    ("Gene Therapy", "60", "developing innovative gene therapies for severe genetic diseases"),
+                    ("Cell Therapy", "40", "advancing cell-based treatments for cancer and other conditions")
+                ]
+                customers = ["patients with rare genetic diseases", "cancer patients", "healthcare providers", "research institutions"]
+                business_model = ["gene therapy development", "clinical trials", "regulatory approvals", "commercialization"]
+                
+                # Special description for BlueBird Bio
+                if 'bluebird' in company_name:
+                    st.markdown("• Biotechnology company focused on addressing the underlying cause of disease at the genetic level")
+                    st.markdown("• 170+ patients have received its therapies across 8 clinical trials")
+            
             # Company-specific segments
-            if 'microsoft' in company_name:
+            elif 'microsoft' in company_name:
                 segments = [
                     ("Productivity and Business Processes", "30", "including Microsoft 365, LinkedIn, and Dynamics"),
                     ("Intelligent Cloud", "40", "featuring Azure, server products, and enterprise services"),
