@@ -79,7 +79,24 @@
     color: #666;
     font-size: 0.95em;
     padding: 4px 0;
-    border-left: 2px solid #1f77b4;
     padding-left: 12px;
     margin-bottom: 8px;
+    position: relative;
+}
+
+.segment-bullet:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #1f77b4;
+}
+
+.segment-bullet:after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(31, 119, 180, 0.1);
 }

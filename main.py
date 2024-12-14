@@ -114,6 +114,8 @@ if st.button("Search", type="primary"):
                     unsafe_allow_html=True
                 )
             
+            st.markdown("---")  # Visual separator
+            
             # Add key business model and customer information based on company type
             customers = []
             business_model = []
