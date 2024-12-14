@@ -4,7 +4,7 @@ import yfinance as yf
 st.title("Stock Price Checker")
 
 # Stock symbol input
-symbol = st.text_input("", placeholder="Enter Stock Symbol").upper()
+symbol = st.text_input("Stock Symbol", value="", label_visibility="collapsed").upper()
 
 def format_large_number(num):
     if num >= 1e12:
